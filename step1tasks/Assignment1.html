@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>STEP1 最終課題：ToDoリスト（フロントエンドバージョン）を作ろう</title>
+    <link rel="stylesheet" href="Assignment1.css">
+    <!-- FontAwesome: http://fontawesome.io/ -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="assignment1_script.js"></script>
+</head>
+
+<body>
+    <header>
+        <b>What is your To-Do ?</b>
+    </header>
+    <main>
+        <div id="inputArea">
+            <center>
+                <input id="inputTask" type="text" name="to-do" placeholder="Enter your new task.(1-140 characters)" />　
+                <a href="#" class="raised" name="saveButton">
+                    <i class="fa fa-floppy-o"></i>
+                    SAVE
+                </a>
+            </center>
+        </div>
+        <center>
+            <ul class="explainList">
+                <li class="listBox taskBox">To-Do</li>
+                <li class="listBox listButton">　</li>
+                <li class="listBox listButton">　</li>
+                <li class="listBox listBoxDate">更新日時</li>
+            </ul>
+            <div id="list">
+            </div>
+        </center>
+    </main>
+</body>
+
+</html>

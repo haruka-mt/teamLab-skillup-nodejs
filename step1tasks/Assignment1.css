@@ -1,0 +1,149 @@
+body {
+    margin: 0px;
+    font-family: 'Verdana', 'Yu Gothic UI';
+}
+
+header {
+    background: orange;
+    color: white;
+    text-align: center;
+    width: 100%;
+    height: 200px;
+    margin: 0 auto;
+    font-size: 4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+main {
+    width: 100%;
+}
+
+ul {
+    margin: 0 0;
+}
+
+#inputArea {
+    padding: 5% 0;
+}
+
+#inputArea:focus{
+    outline: none;
+}
+
+#inputTask {
+    font-size: 2.3em;/*文字サイズ*/
+    line-height: 1;
+    text-decoration: none;
+    padding: 0.2em 0.2em;/*ボタン内の余白*/
+    border-radius: 5px;/*角の丸み*/
+    width: 60%;
+}
+
+/*
+  Reference: https://saruwakakun.com/html-css/reference/buttons#section5
+*/
+.raised {
+    display: inline-block;
+    background: #26a69b;/*背景色*/
+    color: #FFF;/*文字色*/
+    font-size: 2.5em;/*文字サイズ*/
+    line-height: 1;
+    text-decoration: none;
+    padding: 0.2em 0.5em;/*ボタン内の余白*/
+    border-radius: 5px;/*角の丸み*/
+    cursor: pointer;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);/*影*/
+    -webkit-tap-highlight-color: transparent;
+    transition: .1s ease-out;/*変化を緩やかに*/
+    position: relative;
+}
+
+.raised:hover{
+    box-shadow: 0 5px 5px 0 rgba(0,0,0,0.14), 0 10px 20px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);/*浮き上がるように*/
+}
+
+.raised:active{
+    color: orange;
+    background: #dddddd; 
+    -ms-transform: translateY(2px);
+    -webkit-transform: translateY(2px);
+    transform: translateY(2px); 
+    border-bottom: none;
+}
+
+.explainList {
+    display: table;
+    width: 80%;
+    list-style: none;
+    padding: 1em 1em;
+    margin: 0 0;
+    font-size: 1.5em;
+    vertical-align: middle;
+    background: orange;
+    color: white;
+    box-shadow: 5px 0 5px 0 rgba(0,0,0,0.12), -5px 0 5px 0 rgba(0,0,0,0.12);
+}
+
+.taskList {
+    display: table;
+    table-layout: fixed;
+    width: 80%;
+    box-shadow: 5px 0 5px 0 rgba(0,0,0,0.12), -5px 0 5px 0 rgba(0,0,0,0.12);
+    list-style: none;
+    padding: 1em 1em;
+    margin: 0 0;
+    font-size: 1.5em;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.listBox {
+    display: table-cell;
+    word-wrap:break-word;
+    vertical-align: middle;
+}
+
+.taskBox {
+    width: 60%;
+    float: left;
+    text-align: left;
+}
+
+.listBoxDate {
+    width: 20%;
+    float: right;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.taskDate {
+    font-size: 0.6em;
+    color: gray;
+}
+
+.listButton {
+    width: 5%;
+    float: right;
+    font-weight: bold;
+    text-align: right;
+    vertical-align: middle;
+}
+
+.listButton:active{
+    -ms-transform: translateY(2px);
+    -webkit-transform: translateY(2px);
+    transform: translateY(2px); 
+    border-bottom: none;
+}
+
+.trash:hover {
+    color: rgb(255, 11, 93);
+    text-shadow: 0 5px 5px rgba(0,0,0,0.14);
+}
+
+.edit:hover {
+    color: rgb(11, 157, 255);
+    text-shadow: 0 5px 5px rgba(0,0,0,0.14);
+}
