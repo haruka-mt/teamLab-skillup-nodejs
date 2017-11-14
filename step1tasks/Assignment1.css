@@ -1,6 +1,10 @@
 body {
     margin: 0px;
     font-family: 'Verdana', 'Yu Gothic UI';
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    position: relative;
 }
 
 header {
@@ -16,8 +20,19 @@ header {
     align-items: center;
 }
 
+footer {
+    background: orange;
+    color: white;
+    text-align: right;
+    width: 100%;
+    height: 50px;
+    margin: 0 auto;
+    font-size: 0.6em;
+}
+
 main {
     width: 100%;
+    padding-bottom: 50px;
 }
 
 ul {
@@ -75,11 +90,12 @@ ul {
 
 .explainList {
     display: table;
+    table-layout: fixed;
     width: 80%;
     list-style: none;
-    padding: 1em 1em;
+    padding: 1em 0.5em;
     margin: 0 0;
-    font-size: 1.5em;
+    line-height: 1;
     vertical-align: middle;
     background: orange;
     color: white;
@@ -90,45 +106,46 @@ ul {
     display: table;
     table-layout: fixed;
     width: 80%;
+    height: 100%;
     box-shadow: 5px 0 5px 0 rgba(0,0,0,0.12), -5px 0 5px 0 rgba(0,0,0,0.12);
     list-style: none;
-    padding: 1em 1em;
+    padding: 1em 0.5em;
     margin: 0 0;
-    font-size: 1.5em;
-    line-height: 1;
-    vertical-align: middle;
 }
 
 .listBox {
     display: table-cell;
-    word-wrap:break-word;
+    height: 100%;
     vertical-align: middle;
 }
 
 .taskBox {
-    width: 60%;
+    width: 50%;
+    font-size: 1.5em;
+    padding: 0.2em;
+    word-wrap:break-word;
     float: left;
     text-align: left;
 }
 
-.listBoxDate {
-    width: 20%;
+.taskDateBox {
+    width: 15%;
+    font-size: 0.9em;
+    padding: 0.2em;
+    word-wrap:break-word;
     float: right;
     text-align: right;
-    vertical-align: middle;
-}
-
-.taskDate {
-    font-size: 0.6em;
     color: gray;
 }
 
+
 .listButton {
     width: 5%;
+    padding: 0.2em;
+    font-size: 1.7em;
     float: right;
     font-weight: bold;
-    text-align: right;
-    vertical-align: middle;
+    text-align: center;
 }
 
 .listButton:active{
@@ -136,6 +153,34 @@ ul {
     -webkit-transform: translateY(2px);
     transform: translateY(2px); 
     border-bottom: none;
+}
+
+.taskCheckBox {
+    /* display: inline-block; */
+    margin: 0;
+    padding: 0;
+    background: none;
+    color: white;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-color: transparent;
+    width: 1.5em;
+    height: 1.5em;
+    border: 2px #c5c5c5 solid;
+    border-radius: 5px;
+}
+
+.taskCheckBox:checked {
+    background-color: #c5c5c5;
+}
+
+.taskCheckBox:hover {
+    border: 2px orange solid;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.14);
 }
 
 .trash:hover {

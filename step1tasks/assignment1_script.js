@@ -1,29 +1,46 @@
 //読み込み完了時に実行する関数を指定
 $(loaded);
+var taskNumMax;
 
 function loaded() {
+    // for (var i = 0; i < localStorage.length; ++i)
+    // {
+    //     var key = localStorage.key(i);
+    //     localStorage.removeItem(key);
+    // }    
     //SAVEをクリックしたときの動作を指定
     var saveButtonName = document.getElementsByName("saveButton");
     var removeButtonName = document.getElementsByClassName("trash");
     $(saveButtonName).click(
         function () {
-            saveTask();
+            taskNumMax = localStorage.length;
+            taskNumMax = saveTask(taskNumMax);
             loadTask();
         }
     );
+    loadTask();
 }
 
-function saveTask() {
+function saveTask(taskNum) {
     // 時刻をキーにして入力されたテキストを保存する
     var text = $("#inputTask");
     var time = new Date();
+    var taskState = false;
+    var saveItem = new Item(text.val(), time, taskState);
     // 入力チェックをしてからローカルストレージに保存する
     if (checkText(text.val())) {
-        localStorage.setItem(time, text.val());
-        console.log(text.val());
+        localStorage.setItem(taskNum, JSON.stringify(saveItem));
+        //console.log(text.val());
         // テキストボックスを空にする
         text.val("");
     }
+    return taskNum += 1;
+}
+
+function Item(text, time, checked) {
+    this.text = text;
+    this.time = time;
+    this.checked = checked;
 }
 
 // 文字をエスケープする
@@ -53,7 +70,7 @@ function checkText(text) {
         var key = localStorage.key(i);
         var value = localStorage.getItem(key);
         // 内容が一致するものがあるか比較
-        if (text === value) {
+        if (text === value.text) {
             alert("同じ内容は避けてください");
             return false;
         }
@@ -67,18 +84,31 @@ function loadTask() {
     // すでにある要素を削除する
     var list = $("#list");
     list.children().remove();
+    taskNumMax = localStorage.length;
+
     // ローカルストレージに保存された値すべてを要素に追加する
-    var key, value, date, html = [];
+    var key, value, taskItem, date, html = [];
     for (var i = 0, len = localStorage.length; i < len; i++) {
         key = localStorage.key(i);
         value = localStorage.getItem(key);
-        date = new Date(key);
-        console.log(i, key, value);
-        list.prepend("<ul class=\"taskList\" id=\"task"+ i + "\">");
-        $("#task" + i).append("<li class = \"listBox taskBox\">" + value + "</li>");
+        taskItem = JSON.parse(value);
+        date = new Date(taskItem.time);
+        console.log(i, key, taskItem);
+        list.prepend("<ul class=\"taskList\" id=\"task" + i + "\">");
+        if (taskItem.checked)
+        {
+            $("#task" + i).append("<input type = \"checkbox\" checked class = \"listBox listButton taskCheckBox\" style=\"float: left\" onClick = \"changeTaskState\(" + i + "\)\">");
+
+        }
+        else
+        {
+            $("#task" + i).append("<input type = \"checkbox\" class = \"listBox listButton taskCheckBox\" style=\"float: left\" onClick = \"changeTaskState\(" + i + "\)\">");
+        }    
+        $("#task" + i).append("<li class = \"listBox taskBox\">" + taskItem.text + "</li>");
         $("#task" + i).append("<li class = \"listBox listButton trash\" onClick = \"removeTask\(" + i + "\)\">" + "<i class=\"fa fa-trash-o\"></i>" + "</li>");
         $("#task" + i).append("<li class = \"listBox listButton edit\">" + "<i class=\"fa fa-pencil\"></i>" + "</li>");
-        $("#task" + i).append("<li class = \"listBox listBoxDate taskDate\">" + formatDate(date) + "</li>");
+        $("#task" + i).append("<li class = \"listBox taskDateBox\">" + formatDate(date) + "</li>");
+        changeTaskState(i);
     }
 }
 
@@ -93,6 +123,47 @@ function zeroPadding(text) {
 
 function removeTask(taskNum) {
     var key = localStorage.key(taskNum);
-    localStorage.removeItem(key);
+    var value, updateTask, i;
+    for (i = key; i < taskNumMax - 1; ++i)
+    {
+        value = JSON.parse(localStorage.getItem(parseInt(i) + 1));
+        console.log(i, value);
+        localStorage.setItem(i, JSON.stringify(value));
+    }    
+    taskNumMax -= 1;
+    localStorage.removeItem(taskNumMax);
+
     loadTask();
+}
+
+function checkTask(taskNum) {
+    var key = "task" + taskNum;
+    var state = localStorage.getItem(key);
+    console.log(key, state);
+    if (state == "true")
+    {
+        return "checked"; 
+    }
+    else 
+    {
+        return "";
+    }    
+}
+
+function changeTaskState(taskNum) {
+    var value = JSON.parse(localStorage.getItem(taskNum));
+    var taskItem = $("#task" + taskNum).children();
+    //console.log(taskItem);
+    if (taskItem[0].checked == true)
+    {
+        taskItem[1].style.color = "#c5c5c5";
+        taskItem[1].style.textDecoration = "line-through";
+    }
+    else
+    {
+        taskItem[1].style.color = "black";
+        taskItem[1].style.textDecoration = "none";
+    }    
+    value.checked = taskItem[0].checked;
+    localStorage.setItem(taskNum, JSON.stringify(value));
 }
