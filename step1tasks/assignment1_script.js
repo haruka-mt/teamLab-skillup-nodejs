@@ -1,6 +1,8 @@
 //読み込み完了時に実行する関数を指定
 $(loaded);
 var taskNumMax;
+var editFlag;
+var editFlagNum;
 
 function loaded() {
     // for (var i = 0; i < localStorage.length; ++i)
@@ -13,14 +15,25 @@ function loaded() {
     var removeButtonName = document.getElementsByClassName("trash");
     $(saveButtonName).click(
         function () {
+            if (editFlag == true) {
+                alert("編集中のTo-Doがあります．");
+                return;
+            }
             taskNumMax = localStorage.length;
             taskNumMax = saveTask(taskNumMax);
             loadTask();
         }
     );
-    $('input[name="filter"]:radio').change(function () {
-        loadTask();
-    }); 
+    $('input[name="filter"]:radio').change(
+        function () {
+            if (editFlag == true) {
+                alert("編集中のTo-Doがあります．");
+                return;
+            }
+            loadTask();
+        }
+    );
+    editFlag = false;
     loadTask();
 }
 
@@ -33,7 +46,7 @@ function saveTask(taskNum) {
     // 入力チェックをしてからローカルストレージに保存する
     if (checkText(text.val())) {
         localStorage.setItem(taskNum, JSON.stringify(saveItem));
-        //console.log(text.val());
+        console.log(text.val());
         // テキストボックスを空にする
         text.val("");
     }
@@ -62,7 +75,7 @@ function escapeText(text) {
 // 入力チェックを行う
 function checkText(text) {
     // 文字数が0または20以上は不可
-    if (0 === text.length || 140 < text.length) {
+    if (0 == text.length || 140 < text.length) {
         alert("文字数は1〜140字にしてください");
         return false;
     }
@@ -92,13 +105,14 @@ function loadTask() {
     console.log(filter);
 
     // ローカルストレージに保存された値すべてを要素に追加する
-    var key, value, taskItem, date, html = [];
+    var key, value, taskItem, text, date, html = [];
     for (var i = 0, len = localStorage.length; i < len; i++) {
         key = localStorage.key(i);
         value = localStorage.getItem(key);
         taskItem = JSON.parse(value);
         date = new Date(taskItem.time);
-        //console.log(i, key, taskItem);
+        text = escapeText(taskItem.text);
+        console.log(i, key, taskItem);
         var checkFlag;
         if (taskItem.checked) {
             checkFlag = "checked";
@@ -111,12 +125,12 @@ function loadTask() {
         }
         else if (filter == "Notyet" && checkFlag == "checked") {
             continue;
-        }    
+        }
         list.prepend("<ul class=\"taskList\" id=\"task" + i + "\">");
         $("#task" + i).append("<li class = \"listBox listButton\" style=\"float: left;\" ><label><input type = \"checkbox\" class = \"taskCheckBox\" onClick = \"changeTaskState\(" + i + "\)\"" + checkFlag + "> <span class =\"taskCheckBox-deco\"></span></label></li>");
-        $("#task" + i).append("<li class = \"listBox taskBox\">" + taskItem.text + "</li>");
+        $("#task" + i).append("<li class = \"listBox taskBox\">" + text + "</li>");
         $("#task" + i).append("<li class = \"listBox listButton trush\" onClick = \"removeTask\(" + i + "\)\"><i class=\"fa fa-trash-o\"></i></li>");
-        $("#task" + i).append("<li class = \"listBox listButton edit\"><i class=\"fa fa-pencil\"></i></li>");
+        $("#task" + i).append("<li class = \"listBox listButton edit\" onClick = \"changeTaskText\(" + i + "\)\"><i class=\"fa fa-pencil\" style=\"color: black;\"></i></li>");
         $("#task" + i).append("<li class = \"listBox taskDateBox\">" + formatDate(date) + "</li>");
         changeTaskState(i);
     }
@@ -132,14 +146,22 @@ function zeroPadding(text) {
 }
 
 function removeTask(taskNum) {
+    if (editFlag == true) {
+        alert("編集中のTo-Doがあります．");
+        return;
+    }
+
+    if (!confirm("削除してよろしいですか？"))
+    {
+        return;
+    }    
     var key = localStorage.key(taskNum);
     var value, updateTask, i;
-    for (i = key; i < taskNumMax - 1; ++i)
-    {
+    for (i = key; i < taskNumMax - 1; ++i) {
         value = JSON.parse(localStorage.getItem(parseInt(i) + 1));
         //console.log(i, value);
         localStorage.setItem(i, JSON.stringify(value));
-    }    
+    }
     taskNumMax -= 1;
     localStorage.removeItem(taskNumMax);
 
@@ -150,14 +172,12 @@ function checkTask(taskNum) {
     var key = "task" + taskNum;
     var state = localStorage.getItem(key);
     // console.log(key, state);
-    if (state == "true")
-    {
-        return "checked"; 
+    if (state == "true") {
+        return "checked";
     }
-    else 
-    {
+    else {
         return "";
-    }    
+    }
 }
 
 function changeTaskState(taskNum) {
@@ -166,16 +186,48 @@ function changeTaskState(taskNum) {
     var taskChild = $(taskItem[0]).children().children();
     //console.log(taskChild[0]);
 
-    if (taskChild[0].checked == true)
-    {
+    if (taskChild[0].checked == true) {
         taskItem[1].style.color = "#c5c5c5";
         taskItem[1].style.textDecoration = "line-through";
     }
-    else
-    {
+    else {
         taskItem[1].style.color = "black";
         taskItem[1].style.textDecoration = "none";
-    }    
+    }
     value.checked = taskChild[0].checked;
     localStorage.setItem(taskNum, JSON.stringify(value));
+}
+
+function changeTaskText(taskNum) {
+    var value = JSON.parse(localStorage.getItem(taskNum));
+    var taskItem = $("#task" + taskNum).children();
+    var taskChild = $(taskItem[3]).children();
+
+    if (editFlag == true && editFlagNum != taskNum) {
+        alert("他のTo-Doを編集中です！");
+        return;
+    }
+
+    if (editFlag == false) {
+        taskChild[0].style.color = "rgb(11, 157, 255)";
+        editFlag = true;
+        editFlagNum = taskNum;
+
+        var taskText = $(taskItem[1]).text();
+        taskText = taskText.replace(taskText, "<input type = \"text\" id = \"editTask\">");
+        $(taskItem[1]).html(taskText)
+    }
+    else {
+        taskChild[0].style.color = "black";
+        editFlag = false;
+        var taskText = $(taskItem[1]).children().val();
+        if (taskText == "")
+        {
+            $(taskItem[1]).html(value.text);
+            return;
+        }    
+        value.text = taskText;
+        localStorage.setItem(taskNum, JSON.stringify(value));
+        $(taskItem[1]).html(taskText)
+    }
 }

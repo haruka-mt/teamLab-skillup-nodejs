@@ -61,6 +61,14 @@ ul {
     width: 60%;
 }
 
+#editTask {
+    font-size: 1em;
+    text-decoration: none;
+    padding: 0.2em 0.2em;/*ボタン内の余白*/
+    border-radius: 5px;/*角の丸み*/
+    width: 100%;
+}
+
 /*
   Reference: https://saruwakakun.com/html-css/reference/buttons#section5
 */
@@ -165,7 +173,7 @@ ul {
 }
 
 .taskBox {
-    width: 50%;
+    width: 65%;
     font-size: 1.5em;
     padding: 0.2em;
     word-wrap:break-word;
