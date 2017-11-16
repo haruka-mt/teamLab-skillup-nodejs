@@ -18,6 +18,9 @@ function loaded() {
             loadTask();
         }
     );
+    $('input[name="filter"]:radio').change(function () {
+        loadTask();
+    }); 
     loadTask();
 }
 
@@ -85,6 +88,8 @@ function loadTask() {
     var list = $("#list");
     list.children().remove();
     taskNumMax = localStorage.length;
+    var filter = $('input[name="filter"]:checked').val();
+    console.log(filter);
 
     // ローカルストレージに保存された値すべてを要素に追加する
     var key, value, taskItem, date, html = [];
@@ -93,20 +98,25 @@ function loadTask() {
         value = localStorage.getItem(key);
         taskItem = JSON.parse(value);
         date = new Date(taskItem.time);
-        console.log(i, key, taskItem);
-        list.prepend("<ul class=\"taskList\" id=\"task" + i + "\">");
-        if (taskItem.checked)
-        {
-            $("#task" + i).append("<input type = \"checkbox\" checked class = \"listBox listButton taskCheckBox\" style=\"float: left\" onClick = \"changeTaskState\(" + i + "\)\">");
-
+        //console.log(i, key, taskItem);
+        var checkFlag;
+        if (taskItem.checked) {
+            checkFlag = "checked";
         }
-        else
-        {
-            $("#task" + i).append("<input type = \"checkbox\" class = \"listBox listButton taskCheckBox\" style=\"float: left\" onClick = \"changeTaskState\(" + i + "\)\">");
+        else {
+            checkFlag = "";
+        }
+        if (filter == "Finished" && checkFlag == "") {
+            continue;
+        }
+        else if (filter == "Notyet" && checkFlag == "checked") {
+            continue;
         }    
+        list.prepend("<ul class=\"taskList\" id=\"task" + i + "\">");
+        $("#task" + i).append("<li class = \"listBox listButton\" style=\"float: left;\" ><label><input type = \"checkbox\" class = \"taskCheckBox\" onClick = \"changeTaskState\(" + i + "\)\"" + checkFlag + "> <span class =\"taskCheckBox-deco\"></span></label></li>");
         $("#task" + i).append("<li class = \"listBox taskBox\">" + taskItem.text + "</li>");
-        $("#task" + i).append("<li class = \"listBox listButton trash\" onClick = \"removeTask\(" + i + "\)\">" + "<i class=\"fa fa-trash-o\"></i>" + "</li>");
-        $("#task" + i).append("<li class = \"listBox listButton edit\">" + "<i class=\"fa fa-pencil\"></i>" + "</li>");
+        $("#task" + i).append("<li class = \"listBox listButton trush\" onClick = \"removeTask\(" + i + "\)\"><i class=\"fa fa-trash-o\"></i></li>");
+        $("#task" + i).append("<li class = \"listBox listButton edit\"><i class=\"fa fa-pencil\"></i></li>");
         $("#task" + i).append("<li class = \"listBox taskDateBox\">" + formatDate(date) + "</li>");
         changeTaskState(i);
     }
@@ -127,7 +137,7 @@ function removeTask(taskNum) {
     for (i = key; i < taskNumMax - 1; ++i)
     {
         value = JSON.parse(localStorage.getItem(parseInt(i) + 1));
-        console.log(i, value);
+        //console.log(i, value);
         localStorage.setItem(i, JSON.stringify(value));
     }    
     taskNumMax -= 1;
@@ -139,7 +149,7 @@ function removeTask(taskNum) {
 function checkTask(taskNum) {
     var key = "task" + taskNum;
     var state = localStorage.getItem(key);
-    console.log(key, state);
+    // console.log(key, state);
     if (state == "true")
     {
         return "checked"; 
@@ -153,8 +163,10 @@ function checkTask(taskNum) {
 function changeTaskState(taskNum) {
     var value = JSON.parse(localStorage.getItem(taskNum));
     var taskItem = $("#task" + taskNum).children();
-    //console.log(taskItem);
-    if (taskItem[0].checked == true)
+    var taskChild = $(taskItem[0]).children().children();
+    //console.log(taskChild[0]);
+
+    if (taskChild[0].checked == true)
     {
         taskItem[1].style.color = "#c5c5c5";
         taskItem[1].style.textDecoration = "line-through";
@@ -164,6 +176,6 @@ function changeTaskState(taskNum) {
         taskItem[1].style.color = "black";
         taskItem[1].style.textDecoration = "none";
     }    
-    value.checked = taskItem[0].checked;
+    value.checked = taskChild[0].checked;
     localStorage.setItem(taskNum, JSON.stringify(value));
 }

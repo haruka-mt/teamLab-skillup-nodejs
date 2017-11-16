@@ -47,6 +47,11 @@ ul {
     outline: none;
 }
 
+#filter {
+    padding-bottom: 5%;   
+    font-size: 1.5em;
+}
+
 #inputTask {
     font-size: 2.3em;/*文字サイズ*/
     line-height: 1;
@@ -86,6 +91,46 @@ ul {
     -webkit-transform: translateY(2px);
     transform: translateY(2px); 
     border-bottom: none;
+}
+
+.filterRadio {
+    display: none;
+}
+
+.filterRadio-deco {
+    position: relative;
+}
+
+.filterRadio-deco::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: -1.5em;
+    width: 1em;
+    height: 1em;
+    border: 0.2em solid #c5c5c5;
+    border-radius: 50%;
+}
+
+.filterRadio:hover  + .filterRadio-deco::before {
+    border: 0.2em orange solid;
+}
+
+.filterRadio:checked  + .filterRadio-deco::before {
+    background-color: orange;
+    border: 0.2em orange solid;
+}
+
+.filterRadio:checked  + .filterRadio-deco::after {
+    content: "";
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    position: absolute;
+    top: 0.4em;
+    left: -1.1em;
+    background: white;
+    border-radius: 50%;
 }
 
 .explainList {
@@ -140,7 +185,7 @@ ul {
 
 
 .listButton {
-    width: 5%;
+    width: auto;
     padding: 0.2em;
     font-size: 1.7em;
     float: right;
@@ -155,35 +200,7 @@ ul {
     border-bottom: none;
 }
 
-.taskCheckBox {
-    /* display: inline-block; */
-    margin: 0;
-    padding: 0;
-    background: none;
-    color: white;
-    border: none;
-    border-radius: 0;
-    outline: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    background-color: transparent;
-    width: 1.5em;
-    height: 1.5em;
-    border: 2px #c5c5c5 solid;
-    border-radius: 5px;
-}
-
-.taskCheckBox:checked {
-    background-color: #c5c5c5;
-}
-
-.taskCheckBox:hover {
-    border: 2px orange solid;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.14);
-}
-
-.trash:hover {
+.trush:hover {
     color: rgb(255, 11, 93);
     text-shadow: 0 5px 5px rgba(0,0,0,0.14);
 }
@@ -191,4 +208,53 @@ ul {
 .edit:hover {
     color: rgb(11, 157, 255);
     text-shadow: 0 5px 5px rgba(0,0,0,0.14);
+}
+
+.taskCheckBox {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+
+.taskCheckBox-deco {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+}
+
+.taskCheckBox-deco::before {
+    content: "";
+    display: block;
+    width: 1em;
+    height: 1em;
+    border: 0.2em solid #c5c5c5;
+    border-radius: 4px;
+}
+
+.taskCheckBox:hover  + .taskCheckBox-deco::before {
+    border: 0.2em orange solid;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.14);
+}
+
+.taskCheckBox:checked  + .taskCheckBox-deco::before {
+    background-color: orange;
+    border: 0.2em orange solid;
+}
+
+.taskCheckBox:checked  + .taskCheckBox-deco::after {
+    content: "";
+    display: block;
+    width: 0.5em;
+    height: 1em;
+    position: absolute;
+    top: 0em;
+    left: 0.4em;
+    transform: rotate(40deg);
+    border-bottom: 0.2em solid white;
+    border-right: 0.2em solid white;
+}
+
+.taskCheckBox:hover {
+    border: 2px orange solid;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.14);
 }
